@@ -13,6 +13,10 @@ const typeDefs = gql`
   type Query {
     items: [Item]
   }
+  
+  type Mutation {
+    addItem(name: String!, duration: String!, status: String!): Item
+  }
 `;
 
 // Resolvers define the technique for fetching the types in the
@@ -21,6 +25,21 @@ const resolvers = {
   Query: {
     items: () => fetch('http://localhost:3004/items').then(res => res.json()),
   },
+  Mutation: {
+    addItem: (_, {name, duration, status}) => {
+      fetch('http://localhost:3004/items', {
+        method: 'POST',
+        cache: "no-cache",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+        },
+        redirect: "follow",
+        referrer: "no-referrer",
+        body: JSON.stringify({name, duration, status})
+      }).then(res => res.json())
+    }
+  }
 };
 
 const server = new ApolloServer({ typeDefs, resolvers });

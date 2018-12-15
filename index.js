@@ -14,8 +14,12 @@ const typeDefs = gql`
     items: [Item]
   }
   
-  type Mutation {
+  type AddItem {
     addItem(name: String!, duration: String!, status: String!): Item
+  }
+  
+  type Mutation {
+    removeItem(id: Int!): Item
   }
 `;
 
@@ -37,6 +41,20 @@ const resolvers = {
         redirect: "follow",
         referrer: "no-referrer",
         body: JSON.stringify({name, duration, status})
+      }).then(res => res.json())
+    }
+  },
+  Mutation: {
+    removeItem: (_, {id}) => {
+      fetch(`http://localhost:3004/items/${id}`, {
+        method: 'DELETE',
+        cache: "no-cache",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+        },
+        redirect: "follow",
+        referrer: "no-referrer",
       }).then(res => res.json())
     }
   }

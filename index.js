@@ -18,8 +18,12 @@ const typeDefs = gql`
     addItem(name: String!, duration: String!, status: String!): Item
   }
   
-  type Mutation {
+  type RemoveItem {
     removeItem(id: Int!): Item
+  }
+  
+  type Mutation {
+    modifyItem(id: Int!, name: String!, duration: String!, status: String!): Item
   }
 `;
 
@@ -29,7 +33,7 @@ const resolvers = {
   Query: {
     items: () => fetch('http://localhost:3004/items').then(res => res.json()),
   },
-  Mutation: {
+  AddItem: {
     addItem: (_, {name, duration, status}) => {
       fetch('http://localhost:3004/items', {
         method: 'POST',
@@ -44,7 +48,7 @@ const resolvers = {
       }).then(res => res.json())
     }
   },
-  Mutation: {
+  RemoveItem: {
     removeItem: (_, {id}) => {
       fetch(`http://localhost:3004/items/${id}`, {
         method: 'DELETE',
@@ -55,6 +59,21 @@ const resolvers = {
         },
         redirect: "follow",
         referrer: "no-referrer",
+      }).then(res => res.json())
+    }
+  },
+  Mutation: {
+    modifyItem: (_, {id, name, status, duration}) => {
+      fetch(`http://localhost:3004/items/${id}`, {
+        method: 'PUT',
+        cache: "no-cache",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+        },
+        redirect: "follow",
+        referrer: "no-referrer",
+        body: JSON.stringify({name, status, duration})
       }).then(res => res.json())
     }
   }

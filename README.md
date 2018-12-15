@@ -17,3 +17,14 @@ mutation RemoveItem($id: Int!) {
   }
 }
 ```
+
+Mutation to edit item:
+```
+mutation ModifyItem($id: Int!, $name: String!, $duration: String!, $status: String!) {
+  modifyItem(id: $id, name: $name, duration: $duration, status: $status) {
+    name
+    duration
+    status
+  }
+}
+```

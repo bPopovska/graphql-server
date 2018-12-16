@@ -11,7 +11,7 @@ const typeDefs = gql`
   }
 
   type Query {
-    items: [Item]
+    items(status: String!): [Item]
   }
   
   type Mutation {
@@ -21,11 +21,16 @@ const typeDefs = gql`
   }
 `;
 
-// Resolvers define the technique for fetching the types in the
-// schema.  We'll retrieve items from the "items" array above.
 const resolvers = {
   Query: {
-    items: () => fetch('http://localhost:3004/items').then(res => res.json()),
+    items: (_, {status}) => {
+      return fetch('http://localhost:3004/items').
+            then(res => res.json()).
+            then(json => json.filter(item => {
+              console.log(item.status, status)
+              return item.status === status
+            }))
+    }
   },
   Mutation: {
     addItem: (_, {name, duration, status}) => {

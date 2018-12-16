@@ -1,3 +1,5 @@
+## CRUD example 
+
 Mutation to add item:
 ```{javascript}
 mutation AddItem($name: String!, $duration: String!, $status: String!) {
@@ -25,6 +27,35 @@ mutation ModifyItem($id: Int!, $name: String!, $duration: String!, $status: Stri
     name
     duration
     status
+  }
+}
+```
+
+
+## Jira tasks
+
+```
+{
+  tasks {
+    id
+    description
+    reporter {
+      name
+      role
+    }
+    assignee {
+      name
+      role
+    }
+    status
+    timeEntries {
+      description
+      person {
+        name
+        role
+      }
+      timeLogged
+    }
   }
 }
 ```
